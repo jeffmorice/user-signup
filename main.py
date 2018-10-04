@@ -27,6 +27,7 @@ def validate():
     p_verification_error = ''                      # {2}
     email_error = ''                               # {3}
 
+    # retrieve form data
     u_candidate = request.form["username"]         # {4}
     p_candidate = request.form["password"]
     p_verified = request.form["password_verified"]
@@ -45,15 +46,25 @@ def validate():
     # password validation
     if len(p_candidate) == 0:
         password_error = 'Please enter a password.'
+        p_candidate = ''
+        p_verified = ''
     elif ' ' in p_candidate:
         password_error = 'cannot contain spaces.'
+        p_candidate = ''
+        p_verified = ''
     elif len(p_candidate) < 8 or len(p_candidate) > 20:
         password_error = 'must be between 8 and 20 characters.'
+        p_candidate = ''
+        p_verified = ''
     elif u_candidate in p_candidate or p_candidate in u_candidate:
         password_error = 'should not be similar to usernames.'
+        p_candidate = ''
+        p_verified = ''
     # password matching validation
     if p_candidate != p_verified:
         p_verification_error = 'Passwords do not match.'
+        p_candidate = ''
+        p_verified = ''
 
     # email validation
     if e_candidate == '':
