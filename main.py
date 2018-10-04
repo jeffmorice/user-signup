@@ -24,22 +24,50 @@ def index():
 def validate():
     username_error = ''                            # {0}
     password_error = ''                            # {1}
-    email_error = ''                               # {2}
+    p_verification_error = ''                      # {2}
+    email_error = ''                               # {3}
 
-    u_candidate = request.form["username"]         # {3}
+    u_candidate = request.form["username"]         # {4}
     p_candidate = request.form["password"]
     p_verified = request.form["password_verified"]
-    e_candidate = request.form["email"]            # {4}
+    e_candidate = request.form["email"]            # {5}
 
+    # username validation
     if len(u_candidate) == 0:
         username_error = 'Please enter a username.'
     elif ' ' in u_candidate:
-        username_error = 'Usernames cannot contain spaces.'
+        username_error = 'cannot contain spaces.'
     elif len(u_candidate) < 3 or len(u_candidate) > 20:
-        username_error = 'Usernames must be between 3 and 20 characters.'
+        username_error = 'must be between 3 and 20 characters.'
     elif u_candidate.isalnum() == False:
-        username_error = 'Usernames cannot contain special characters.'
+        username_error = 'cannot contain special characters.'
 
+    # password validation
+    if len(p_candidate) == 0:
+        password_error = 'Please enter a password.'
+    elif ' ' in p_candidate:
+        password_error = 'cannot contain spaces.'
+    elif len(p_candidate) < 8 or len(p_candidate) > 20:
+        password_error = 'must be between 8 and 20 characters.'
+    elif u_candidate in p_candidate or p_candidate in u_candidate:
+        password_error = 'should not be similar to usernames.'
+    # password matching validation
+    if p_candidate != p_verified:
+        p_verification_error = 'Passwords do not match.'
+
+    # email validation
+    if e_candidate == '':
+        email_error = ''
+    elif ' ' in e_candidate:
+        email_error = 'cannot contain spaces.'
+    elif len(u_candidate) < 3 or len(e_candidate) > 20:
+        email_error = 'must be between 3 and 20 characters.'
+    elif e_candidate.count("@") != 1:
+        email_error = 'must contain 1 "@" symbol.'
+    elif e_candidate.count(".") != 1:
+        email_error = 'must contain 1 "." symbol.'
+
+    # return errors or redirect if all input is valid
     if len(username_error + password_error + email_error) == 0:
         #if all input is valid, redirect
         u_confirmed = u_candidate
@@ -48,6 +76,7 @@ def validate():
         return render_template('signup.html',
         username_error=username_error,
         password_error=password_error,
+        p_verification_error=p_verification_error,
         email_error=email_error,
         u_candidate=u_candidate,
         e_candidate=e_candidate)
