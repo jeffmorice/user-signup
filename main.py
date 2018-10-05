@@ -79,7 +79,7 @@ def validate():
         email_error = 'must contain 1 "." symbol.'
 
     # return errors or redirect if all input is valid
-    if len(username_error + password_error + email_error) == 0:
+    if len(username_error + password_error + email_error + p_verification_error) == 0:
         #if all input is valid, redirect
         u_confirmed = u_candidate
         return redirect("/welcome?user=" + u_confirmed)
